@@ -7,7 +7,7 @@ class PacMan {
     public points: number = 0;
     public level: number = 0;
     public ballCount: number = 0;
-    public ghostCount: number;
+    public ghostCount: number = 0;
     public state: PacManState = null;
     public superTime: number = 0;
 
@@ -37,6 +37,7 @@ class PacMan {
     public eatGhost(ghost: Ghost) {
         if (this.state === PacManState.Super) {
             this.points = this.points + 10;
+            this.ghostCount++;
         } else if (this.state === PacManState.Regular) {
             this.lives--;
         }

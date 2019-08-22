@@ -115,3 +115,15 @@ test('if the Pac-Man has zero lives left, eating a ghost should reset points to 
     expect(pacman.points).toBe(0);
     expect(pacman.lives).toBe(0);
 });
+
+test('eating a ghost while pacman state is super should increase the total ghost count by 1', () => {
+    const pacman = new PacMan();
+    const anyGhost: Ghost = { name: 'any' };
+    const initialGhostCount = pacman.ghostCount;
+    pacman.state = PacManState.Super;
+
+    pacman.eatGhost(anyGhost);
+
+    expect(pacman.ghostCount).toBe(initialGhostCount + 1);
+});
+
