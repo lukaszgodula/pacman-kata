@@ -30,3 +30,15 @@ test('increase ballCount when eating super ball', () => {
 
     expect(pacman.ballCount).toBe(initialBallCount + 1);
 });
+
+test('reset ballCount and increase level when reaching 40 ballCount', () => {
+    const pacman = new PacMan();
+    const ball: Ball = { type: 'regular' };
+
+    for (let i = 0; i < 40; i++) {
+        pacman.eatBall(ball);
+    }
+
+    expect(pacman.ballCount).toBe(0);
+    expect(pacman.level).toBe(1);
+});
