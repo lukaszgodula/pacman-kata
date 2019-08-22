@@ -1,6 +1,8 @@
 import { Ball } from '../src/pacman-core/Ball';
 import { Ghost } from '../src/pacman-core/Ghost';
+import { Grid } from '../src/pacman-core/Grid';
 import PacMan from '../src/pacman-core/PacMan';
+import { PacManDirection } from '../src/pacman-core/PacManDirection.enum';
 import { PacManState } from '../src/pacman-core/PacManState.enum';
 
 test('basic', () => {
@@ -136,4 +138,18 @@ test('eating a ghost while pacman state is super should increase the particular 
     pacman.eatGhost(theGhost);
 
     expect(pacman.ghostStatistics.getCountFor(theGhost.name)).toBe(initialGhostCount + 1);
+});
+
+test('PacMan has moved down', () => {
+    const grid = new Grid();
+    const pacman = new PacMan(grid);
+    pacman.direction = PacManDirection.Down;
+    const initialX = 2;
+    const initialY = 3;
+    grid.pacmanPosition = { x: initialX, y: initialY };
+
+    pacman.tick();
+
+    expect(grid.pacmanPosition.x).toBe(initialX);
+    expect(grid.pacmanPosition.y).toBe(initialY - 1);
 });

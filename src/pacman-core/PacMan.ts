@@ -1,6 +1,8 @@
 import { Ball } from './Ball';
 import { Ghost } from './Ghost';
 import { GhostsStatistics } from './GhostsStatistics';
+import { Grid } from './Grid';
+import { PacManDirection } from './PacManDirection.enum';
 import { PacManState } from './PacManState.enum';
 
 class PacMan {
@@ -11,6 +13,13 @@ class PacMan {
     public ghostStatistics: GhostsStatistics = new GhostsStatistics();
     public state: PacManState = null;
     public superTime: number = 0;
+    public direction: PacManDirection = null;
+
+    public grid: Grid;
+
+    constructor(grid?: Grid) {
+        this.grid = grid;
+    }
 
     public whatAmILike(): string {
         return 'funny';
@@ -20,6 +29,10 @@ class PacMan {
         this.superTime = Math.max(0, this.superTime - 1);
         if (this.superTime === 0) {
             this.state = PacManState.Regular;
+        }
+        switch (this.direction) {
+            case PacManDirection.Down:
+                this.grid.pacmanPosition.y = this.grid.pacmanPosition.y - 1;
         }
     }
 
