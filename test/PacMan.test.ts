@@ -1,4 +1,5 @@
 import { Ball } from '../src/pacman-core/Ball';
+import { Ghost } from '../src/pacman-core/Ghost';
 import PacMan from '../src/pacman-core/PacMan';
 import { PacManState } from '../src/pacman-core/PacManState.enum';
 
@@ -80,3 +81,24 @@ test('if the Pac-Man state is super, super time should be decreased by 1 on each
     expect(pacman.state).toBe(PacManState.Regular);
 });
 
+test('if the Pac-Man state is super eating a ghost should increase points by 10,', () => {
+    const pacman = new PacMan();
+    pacman.state = PacManState.Super;
+    const anyGhost: Ghost = { name: 'any' };
+    const initialPoints = pacman.points;
+
+    pacman.eatGhost(anyGhost);
+
+    expect(pacman.points).toBe(initialPoints + 10);
+});
+
+test('if the Pac-Man state is regular eating a ghost should not increase points by 10,', () => {
+    const pacman = new PacMan();
+    pacman.state = PacManState.Regular;
+    const anyGhost: Ghost = { name: 'any' };
+    const initialPoints = pacman.points;
+
+    pacman.eatGhost(anyGhost);
+
+    expect(pacman.points).not.toBe(initialPoints + 10);
+});

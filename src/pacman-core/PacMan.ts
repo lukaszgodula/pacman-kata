@@ -1,9 +1,10 @@
 import { Ball } from './Ball';
+import { Ghost } from './Ghost';
 import { PacManState } from './PacManState.enum';
 
 class PacMan {
     public lives: number;
-    public points: number;
+    public points: number = 0;
     public level: number = 0;
     public ballCount: number = 0;
     public ghostCount: number;
@@ -21,7 +22,7 @@ class PacMan {
         }
     }
 
-    eatBall(ball: Ball) {
+    public eatBall(ball: Ball) {
         this.ballCount++;
         if (this.ballCount === 40) {
             this.ballCount = 0;
@@ -30,6 +31,12 @@ class PacMan {
         if (ball.type === 'super') {
             this.state = PacManState.Super;
             this.superTime = 10;
+        }
+    }
+
+    public eatGhost(ghost: Ghost) {
+        if (this.state === PacManState.Super) {
+            this.points = this.points + 10;
         }
     }
 }
