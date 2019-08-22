@@ -140,16 +140,31 @@ test('eating a ghost while pacman state is super should increase the particular 
     expect(pacman.ghostStatistics.getCountFor(theGhost.name)).toBe(initialGhostCount + 1);
 });
 
-test('PacMan has moved down', () => {
+test('PacMan should move down', () => {
     const grid = new Grid();
     const pacman = new PacMan(grid);
     pacman.direction = PacManDirection.Down;
     const initialX = 2;
-    const initialY = 3;
+    const initialY = 0;
     grid.pacmanPosition = { x: initialX, y: initialY };
 
     pacman.tick();
 
     expect(grid.pacmanPosition.x).toBe(initialX);
     expect(grid.pacmanPosition.y).toBe(initialY - 1);
+});
+
+test('PacMan should not move down', () => {
+    const grid = new Grid();
+    const pacman = new PacMan(grid);
+    pacman.direction = PacManDirection.Down;
+    const initialX = 4;
+    const initialY = -6;
+    grid.pacmanPosition = { x: initialX, y: initialY };
+    grid.obstaclesPositions.push({ x: initialX, y: initialY - 1 });
+
+    pacman.tick();
+
+    expect(grid.pacmanPosition.x).toBe(initialX);
+    expect(grid.pacmanPosition.y).toBe(initialY);
 });

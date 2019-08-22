@@ -4,6 +4,7 @@ import { GhostsStatistics } from './GhostsStatistics';
 import { Grid } from './Grid';
 import { PacManDirection } from './PacManDirection.enum';
 import { PacManState } from './PacManState.enum';
+import { Point } from './Point';
 
 class PacMan {
     public lives: number;
@@ -32,7 +33,10 @@ class PacMan {
         }
         switch (this.direction) {
             case PacManDirection.Down:
-                this.grid.pacmanPosition.y = this.grid.pacmanPosition.y - 1;
+                const destination = { x: this.grid.pacmanPosition.x, y: this.grid.pacmanPosition.y - 1 };
+                if (this.canMoveTo(destination)) {
+                    this.grid.pacmanPosition = destination;
+                }
         }
     }
 
@@ -59,6 +63,10 @@ class PacMan {
         if (this.lives === 0) {
             this.points = 0;
         }
+    }
+
+    private canMoveTo(point: Point): boolean {
+        return this.grid.obstaclesPositions.find(p => p.x === point.x && p.y === point.y) === undefined;
     }
 }
 
