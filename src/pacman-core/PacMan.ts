@@ -1,8 +1,10 @@
+import { Ball } from './Ball';
+
 class PacMan {
     public lives: number;
     public points: number;
     public level: number;
-    public ballCount: number;
+    public ballCount: number = 0;
     public ghostCount: number;
     public state: string;
     public supeTime: number;
@@ -13,6 +15,10 @@ class PacMan {
 
     public tick(): void {
 
+    }
+
+    eatBall(ball: Ball) {
+        this.ballCount++;
     }
 }
 
