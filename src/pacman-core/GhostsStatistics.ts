@@ -18,6 +18,6 @@ export class GhostsStatistics {
     }
 
     public getCountFor(name: string): number {
-        throw new Error('Method not implemented.');
+        return this.counts.get(name) || 0;
     }
 }
