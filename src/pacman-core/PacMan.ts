@@ -40,6 +40,10 @@ class PacMan {
         } else if (this.state === PacManState.Regular) {
             this.lives--;
         }
+
+        if (this.lives === 0) {
+            this.points = 0;
+        }
     }
 }
 
