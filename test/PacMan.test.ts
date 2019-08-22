@@ -92,13 +92,14 @@ test('if the Pac-Man state is super eating a ghost should increase points by 10,
     expect(pacman.points).toBe(initialPoints + 10);
 });
 
-test('if the Pac-Man state is regular eating a ghost should not increase points by 10,', () => {
+test('if the Pac-Man state is regular eating a ghost should decrease lives by 1', () => {
     const pacman = new PacMan();
     pacman.state = PacManState.Regular;
+    pacman.lives = 5;
     const anyGhost: Ghost = { name: 'any' };
-    const initialPoints = pacman.points;
+    const initialLives = pacman.lives;
 
     pacman.eatGhost(anyGhost);
 
-    expect(pacman.points).not.toBe(initialPoints + 10);
+    expect(pacman.lives).toBe(initialLives - 1);
 });

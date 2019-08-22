@@ -37,6 +37,8 @@ class PacMan {
     public eatGhost(ghost: Ghost) {
         if (this.state === PacManState.Super) {
             this.points = this.points + 10;
+        } else if (this.state === PacManState.Regular) {
+            this.lives--;
         }
     }
 }
