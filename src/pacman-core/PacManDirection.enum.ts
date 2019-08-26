@@ -1,5 +1,5 @@
 export enum PacManDirection {
-    Uo = 'up',
+    Up = 'up',
     Down = 'down',
     Left = 'left',
     Right = 'right'

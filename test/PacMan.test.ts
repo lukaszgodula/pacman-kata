@@ -4,167 +4,177 @@ import { Grid } from '../src/pacman-core/Grid';
 import PacMan from '../src/pacman-core/PacMan';
 import { PacManDirection } from '../src/pacman-core/PacManDirection.enum';
 import { PacManState } from '../src/pacman-core/PacManState.enum';
+import { getDirections } from './helpers/get-directions';
+import { getExpectedUnconstrainedPosition } from './helpers/get-expected-unconstrained-position';
 
 test('basic', () => {
-    const pacman = new PacMan();
-    expect(pacman.whatAmILike()).toBe('funny');
+	const pacman = new PacMan();
+	expect(pacman.whatAmILike()).toBe('funny');
 });
 
 test('has tick method', () => {
-    const pacman = new PacMan();
-    expect(pacman.tick());
+	const pacman = new PacMan();
+	expect(pacman.tick());
 });
 
 test('increase ballCount when eating regular ball', () => {
-    const pacman = new PacMan();
-    const initialBallCount = pacman.ballCount;
-    const ball: Ball = { type: 'regular' };
+	const pacman = new PacMan();
+	const initialBallCount = pacman.ballCount;
+	const ball: Ball = { type: 'regular' };
 
-    pacman.eatBall(ball);
+	pacman.eatBall(ball);
 
-    expect(pacman.ballCount).toBe(initialBallCount + 1);
+	expect(pacman.ballCount).toBe(initialBallCount + 1);
 });
 
 test('increase ballCount when eating super ball', () => {
-    const pacman = new PacMan();
-    const initialBallCount = pacman.ballCount;
-    const ball: Ball = { type: 'super' };
+	const pacman = new PacMan();
+	const initialBallCount = pacman.ballCount;
+	const ball: Ball = { type: 'super' };
 
-    pacman.eatBall(ball);
+	pacman.eatBall(ball);
 
-    expect(pacman.ballCount).toBe(initialBallCount + 1);
+	expect(pacman.ballCount).toBe(initialBallCount + 1);
 });
 
 test('reset ballCount and increase level when reaching 40 ballCount', () => {
-    const pacman = new PacMan();
-    const ball: Ball = { type: 'regular' };
+	const pacman = new PacMan();
+	const ball: Ball = { type: 'regular' };
 
-    for (let i = 0; i < 40; i++) {
-        pacman.eatBall(ball);
-    }
+	for (let i = 0; i < 40; i++) {
+		pacman.eatBall(ball);
+	}
 
-    expect(pacman.ballCount).toBe(0);
-    expect(pacman.level).toBe(1);
+	expect(pacman.ballCount).toBe(0);
+	expect(pacman.level).toBe(1);
 });
 
 test('if the ball is of ball type super, the Pac-Man state should change to super and set super time to 10', () => {
-    const pacman = new PacMan();
-    const ball: Ball = { type: 'super' };
+	const pacman = new PacMan();
+	const ball: Ball = { type: 'super' };
 
-    pacman.eatBall(ball);
+	pacman.eatBall(ball);
 
-    expect(pacman.state).toBe(PacManState.Super);
-    expect(pacman.superTime).toBe(10);
+	expect(pacman.state).toBe(PacManState.Super);
+	expect(pacman.superTime).toBe(10);
 });
 
 test('if the ball is of ball type regular, the Pac-Man state should stay null and super time should not be 10', () => {
-    const pacman = new PacMan();
-    const ball: Ball = { type: 'regular' };
+	const pacman = new PacMan();
+	const ball: Ball = { type: 'regular' };
 
-    pacman.eatBall(ball);
+	pacman.eatBall(ball);
 
-    expect(pacman.state).toBe(null);
-    expect(pacman.superTime).not.toBe(10);
+	expect(pacman.state).toBe(null);
+	expect(pacman.superTime).not.toBe(10);
 });
 
 test('if the Pac-Man state is super, super time should be decreased by 1 on each tick (if zero then return to the regular state);', () => {
-    const pacman = new PacMan();
-    const tickCount: number = 10;
+	const pacman = new PacMan();
+	const tickCount: number = 10;
 
-    pacman.state = PacManState.Super;
-    pacman.superTime = tickCount;
+	pacman.state = PacManState.Super;
+	pacman.superTime = tickCount;
 
-    for (let i = 0; i < tickCount; i++) {
-        const actualSuperTime = pacman.superTime;
-        pacman.tick();
-        expect(pacman.superTime).toBe(actualSuperTime - 1);
-    }
+	for (let i = 0; i < tickCount; i++) {
+		const actualSuperTime = pacman.superTime;
+		pacman.tick();
+		expect(pacman.superTime).toBe(actualSuperTime - 1);
+	}
 
-    expect(pacman.state).toBe(PacManState.Regular);
+	expect(pacman.state).toBe(PacManState.Regular);
 });
 
 test('if the Pac-Man state is super eating a ghost should increase points by 10,', () => {
-    const pacman = new PacMan();
-    pacman.state = PacManState.Super;
-    const anyGhost: Ghost = { name: 'any' };
-    const initialPoints = pacman.points;
+	const pacman = new PacMan();
+	pacman.state = PacManState.Super;
+	const anyGhost: Ghost = { name: 'any' };
+	const initialPoints = pacman.points;
 
-    pacman.eatGhost(anyGhost);
+	pacman.eatGhost(anyGhost);
 
-    expect(pacman.points).toBe(initialPoints + 10);
+	expect(pacman.points).toBe(initialPoints + 10);
 });
 
 test('if the Pac-Man state is regular eating a ghost should decrease lives by 1', () => {
-    const pacman = new PacMan();
-    pacman.state = PacManState.Regular;
-    pacman.lives = 5;
-    const anyGhost: Ghost = { name: 'any' };
-    const initialLives = pacman.lives;
+	const pacman = new PacMan();
+	pacman.state = PacManState.Regular;
+	pacman.lives = 5;
+	const anyGhost: Ghost = { name: 'any' };
+	const initialLives = pacman.lives;
 
-    pacman.eatGhost(anyGhost);
+	pacman.eatGhost(anyGhost);
 
-    expect(pacman.lives).toBe(initialLives - 1);
+	expect(pacman.lives).toBe(initialLives - 1);
 });
 
 test('if the Pac-Man has zero lives left, eating a ghost should reset points to zero', () => {
-    const pacman = new PacMan();
-    pacman.lives = 1;
-    pacman.state = PacManState.Regular;
-    const anyGhost: Ghost = { name: 'any' };
+	const pacman = new PacMan();
+	pacman.lives = 1;
+	pacman.state = PacManState.Regular;
+	const anyGhost: Ghost = { name: 'any' };
 
-    pacman.eatGhost(anyGhost);
+	pacman.eatGhost(anyGhost);
 
-    expect(pacman.points).toBe(0);
-    expect(pacman.lives).toBe(0);
+	expect(pacman.points).toBe(0);
+	expect(pacman.lives).toBe(0);
 });
 
 test('eating a ghost while pacman state is super should increase the total ghost count by 1', () => {
-    const pacman = new PacMan();
-    const anyGhost: Ghost = { name: 'any' };
-    const initialGhostCount = pacman.ghostStatistics.getTotal();
-    pacman.state = PacManState.Super;
+	const pacman = new PacMan();
+	const anyGhost: Ghost = { name: 'any' };
+	const initialGhostCount = pacman.ghostStatistics.getTotal();
+	pacman.state = PacManState.Super;
 
-    pacman.eatGhost(anyGhost);
+	pacman.eatGhost(anyGhost);
 
-    expect(pacman.ghostStatistics.getTotal()).toBe(initialGhostCount + 1);
+	expect(pacman.ghostStatistics.getTotal()).toBe(initialGhostCount + 1);
 });
 
 test('eating a ghost while pacman state is super should increase the particular ghost count by 1', () => {
-    const pacman = new PacMan();
-    const theGhost: Ghost = { name: 'particular' };
-    const initialGhostCount = pacman.ghostStatistics.getCountFor(theGhost.name);
-    pacman.state = PacManState.Super;
+	const pacman = new PacMan();
+	const theGhost: Ghost = { name: 'particular' };
+	const initialGhostCount = pacman.ghostStatistics.getCountFor(theGhost.name);
+	pacman.state = PacManState.Super;
 
-    pacman.eatGhost(theGhost);
+	pacman.eatGhost(theGhost);
 
-    expect(pacman.ghostStatistics.getCountFor(theGhost.name)).toBe(initialGhostCount + 1);
+	expect(pacman.ghostStatistics.getCountFor(theGhost.name)).toBe(initialGhostCount + 1);
 });
 
-test('PacMan should move down', () => {
-    const grid = new Grid();
-    const pacman = new PacMan(grid);
-    pacman.direction = PacManDirection.Down;
-    const initialX = 2;
-    const initialY = 0;
-    grid.pacmanPosition = { x: initialX, y: initialY };
+test('PacMan should move to destination', () => {
+	const directions = getDirections();
 
-    pacman.tick();
+	for (const direction of directions) {
+		const grid = new Grid();
+		const pacman = new PacMan(grid);
+		pacman.direction = direction;
+		const initialPoint = { x: 2, y: 2 };
+		const expectedPoint = getExpectedUnconstrainedPosition(direction, initialPoint)
+		grid.pacmanPosition = initialPoint;
 
-    expect(grid.pacmanPosition.x).toBe(initialX);
-    expect(grid.pacmanPosition.y).toBe(initialY - 1);
+		pacman.tick();
+
+		console.log('testing direction: ' + direction);
+		expect(grid.pacmanPosition).toEqual(expectedPoint);
+	}
 });
 
-test('PacMan should not move down', () => {
-    const grid = new Grid();
-    const pacman = new PacMan(grid);
-    pacman.direction = PacManDirection.Down;
-    const initialX = 4;
-    const initialY = -6;
-    grid.pacmanPosition = { x: initialX, y: initialY };
-    grid.obstaclesPositions.push({ x: initialX, y: initialY - 1 });
+test('PacMan should not move to destination', () => {
+	const directions = getDirections();
 
-    pacman.tick();
+	for (const direction of directions) {
+		const grid = new Grid();
+		const pacman = new PacMan(grid);
+		pacman.direction = direction;
+		const initialPoint = { x: 2, y: 2 };
+		const expectedPoint = { x: 2, y: 2 };
+		grid.pacmanPosition = initialPoint;
+		grid.obstaclesPositions.push(getExpectedUnconstrainedPosition(direction, initialPoint));
 
-    expect(grid.pacmanPosition.x).toBe(initialX);
-    expect(grid.pacmanPosition.y).toBe(initialY);
+		pacman.tick();
+
+		console.log('testing direction: ' + direction);
+		expect(grid.pacmanPosition).toEqual(expectedPoint);
+	}
 });
