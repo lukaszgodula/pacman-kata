@@ -2,7 +2,7 @@ import { Ball } from './Ball';
 import { Ghost } from './Ghost';
 import { GhostsStatistics } from './GhostsStatistics';
 import { Grid } from './Grid';
-import { PacManDirection } from './PacManDirection.enum';
+import { Direction } from './Direction.enum';
 import { PacManState } from './PacManState.enum';
 import { Point } from './Point';
 
@@ -14,7 +14,7 @@ class PacMan {
 	public ghostStatistics: GhostsStatistics = new GhostsStatistics();
 	public state: PacManState = null;
 	public superTime: number = 0;
-	public direction: PacManDirection = null;
+	public direction: Direction = null;
 
 	public grid: Grid;
 
@@ -32,16 +32,16 @@ class PacMan {
 			this.state = PacManState.Regular;
 		}
 		switch (this.direction) {
-			case PacManDirection.Down:
+			case Direction.Down:
 				this.tryMoveTo({ y: this.grid.pacmanPosition.y - 1 });
 				break;
-			case PacManDirection.Left:
+			case Direction.Left:
 				this.tryMoveTo({ x: this.grid.pacmanPosition.x - 1 });
 				break;
-			case PacManDirection.Right:
+			case Direction.Right:
 				this.tryMoveTo({ x: this.grid.pacmanPosition.x + 1 });
 				break;
-			case PacManDirection.Up:
+			case Direction.Up:
 				this.tryMoveTo({ y: this.grid.pacmanPosition.y + 1 });
 				break;
 		}

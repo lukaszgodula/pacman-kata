@@ -2,7 +2,6 @@ import { Ball } from '../src/pacman-core/Ball';
 import { Ghost } from '../src/pacman-core/Ghost';
 import { Grid } from '../src/pacman-core/Grid';
 import PacMan from '../src/pacman-core/PacMan';
-import { PacManDirection } from '../src/pacman-core/PacManDirection.enum';
 import { PacManState } from '../src/pacman-core/PacManState.enum';
 import { getDirections } from './helpers/get-directions';
 import { getExpectedUnconstrainedPosition } from './helpers/get-expected-unconstrained-position';

@@ -1,4 +1,4 @@
-export enum PacManDirection {
+export enum Direction {
     Up = 'up',
     Down = 'down',
     Left = 'left',

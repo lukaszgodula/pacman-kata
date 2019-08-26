@@ -1,5 +1,5 @@
-import { PacManDirection } from '../../src/pacman-core/PacManDirection.enum';
+import { Direction } from '../../src/pacman-core/Direction.enum';
 
-export function getDirections(): PacManDirection[] {
-	return Object.keys(PacManDirection).map(key => PacManDirection[key] as PacManDirection);
+export function getDirections(): Direction[] {
+	return Object.keys(Direction).map(key => Direction[key] as Direction);
 }
