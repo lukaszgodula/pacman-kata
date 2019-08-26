@@ -5,6 +5,7 @@ import PacMan from '../src/pacman-core/PacMan';
 import { PacManState } from '../src/pacman-core/PacManState.enum';
 import { getDirections } from './helpers/get-directions';
 import { getExpectedUnconstrainedPosition } from './helpers/get-expected-unconstrained-position';
+import { forEveryDirectionDo } from './helpers/for-every-direction-do';
 
 test('basic', () => {
 	const pacman = new PacMan();
@@ -142,9 +143,7 @@ test('eating a ghost while pacman state is super should increase the particular 
 });
 
 test('PacMan should move to destination', () => {
-	const directions = getDirections();
-
-	for (const direction of directions) {
+	forEveryDirectionDo(direction => {
 		const grid = new Grid();
 		const pacman = new PacMan(grid);
 		pacman.direction = direction;
@@ -154,15 +153,12 @@ test('PacMan should move to destination', () => {
 
 		pacman.tick();
 
-		console.log('testing direction: ' + direction);
 		expect(grid.pacmanPosition).toEqual(expectedPoint);
-	}
+	});
 });
 
 test('PacMan should not move to destination', () => {
-	const directions = getDirections();
-
-	for (const direction of directions) {
+	forEveryDirectionDo(direction => {
 		const grid = new Grid();
 		const pacman = new PacMan(grid);
 		pacman.direction = direction;
@@ -173,7 +169,16 @@ test('PacMan should not move to destination', () => {
 
 		pacman.tick();
 
-		console.log('testing direction: ' + direction);
 		expect(grid.pacmanPosition).toEqual(expectedPoint);
-	}
+	});
+});
+
+test('PacMan should rotate', () => {
+	forEveryDirectionDo(direction => {
+		const pacman = new PacMan();
+
+		pacman.rotate(direction);
+
+		expect(pacman.direction).toEqual(direction);
+	});
 });

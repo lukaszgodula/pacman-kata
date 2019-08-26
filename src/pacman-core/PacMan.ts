@@ -47,7 +47,7 @@ class PacMan {
 		}
 	}
 
-	public eatBall(ball: Ball) {
+	public eatBall(ball: Ball): void {
 		this.ballCount++;
 		if (this.ballCount === 40) {
 			this.ballCount = 0;
@@ -59,7 +59,7 @@ class PacMan {
 		}
 	}
 
-	public eatGhost(ghost: Ghost) {
+	public eatGhost(ghost: Ghost): void {
 		if (this.state === PacManState.Super) {
 			this.points = this.points + 10;
 			this.ghostStatistics.increaseCountFor(ghost);
@@ -72,7 +72,11 @@ class PacMan {
 		}
 	}
 
-	private tryMoveTo(changedCoordinates: Partial<Point>) {
+	public rotate(direction: Direction): void {
+		this.direction = direction;
+	}
+
+	private tryMoveTo(changedCoordinates: Partial<Point>): void {
 		const destination = { ...this.grid.pacmanPosition, ...changedCoordinates };
 		if (this.canMoveTo(destination)) {
 			this.grid.pacmanPosition = destination;
