@@ -16,11 +16,7 @@ class PacMan {
 	public superTime: number = 0;
 	public direction: Direction = null;
 
-	public grid: Grid;
-
-	constructor(grid?: Grid) {
-		this.grid = grid;
-	}
+	constructor(public grid?: Grid) { }
 
 	public whatAmILike(): string {
 		return 'funny';

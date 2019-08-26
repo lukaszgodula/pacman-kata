@@ -3,9 +3,9 @@ import { Ghost } from '../src/pacman-core/Ghost';
 import { Grid } from '../src/pacman-core/Grid';
 import PacMan from '../src/pacman-core/PacMan';
 import { PacManState } from '../src/pacman-core/PacManState.enum';
-import { getDirections } from './helpers/get-directions';
-import { getExpectedUnconstrainedPosition } from './helpers/get-expected-unconstrained-position';
-import { forEveryDirectionDo } from './helpers/for-every-direction-do';
+import { getExpectedUnconstrainedPosition } from './helpers/getExpectedUnconstrainedPosition';
+import { forEveryDirectionDo } from './helpers/forEveryDirectionDo';
+import { getGhost } from './helpers/getGhost';
 
 test('basic', () => {
 	const pacman = new PacMan();
@@ -88,7 +88,7 @@ test('if the Pac-Man state is super, super time should be decreased by 1 on each
 test('if the Pac-Man state is super eating a ghost should increase points by 10,', () => {
 	const pacman = new PacMan();
 	pacman.state = PacManState.Super;
-	const anyGhost: Ghost = { name: 'any' };
+	const anyGhost = getGhost({ name: 'any' });
 	const initialPoints = pacman.points;
 
 	pacman.eatGhost(anyGhost);
@@ -100,7 +100,7 @@ test('if the Pac-Man state is regular eating a ghost should decrease lives by 1'
 	const pacman = new PacMan();
 	pacman.state = PacManState.Regular;
 	pacman.lives = 5;
-	const anyGhost: Ghost = { name: 'any' };
+	const anyGhost = getGhost({ name: 'any' });
 	const initialLives = pacman.lives;
 
 	pacman.eatGhost(anyGhost);
@@ -112,7 +112,7 @@ test('if the Pac-Man has zero lives left, eating a ghost should reset points to 
 	const pacman = new PacMan();
 	pacman.lives = 1;
 	pacman.state = PacManState.Regular;
-	const anyGhost: Ghost = { name: 'any' };
+	const anyGhost = getGhost({ name: 'any' });
 
 	pacman.eatGhost(anyGhost);
 
@@ -122,7 +122,7 @@ test('if the Pac-Man has zero lives left, eating a ghost should reset points to 
 
 test('eating a ghost while pacman state is super should increase the total ghost count by 1', () => {
 	const pacman = new PacMan();
-	const anyGhost: Ghost = { name: 'any' };
+	const anyGhost = getGhost({ name: 'any' });
 	const initialGhostCount = pacman.ghostStatistics.getTotal();
 	pacman.state = PacManState.Super;
 
@@ -133,7 +133,7 @@ test('eating a ghost while pacman state is super should increase the total ghost
 
 test('eating a ghost while pacman state is super should increase the particular ghost count by 1', () => {
 	const pacman = new PacMan();
-	const theGhost: Ghost = { name: 'particular' };
+	const theGhost = getGhost({ name: 'particular' });
 	const initialGhostCount = pacman.ghostStatistics.getCountFor(theGhost.name);
 	pacman.state = PacManState.Super;
 
@@ -180,5 +180,38 @@ test('PacMan should rotate', () => {
 		pacman.rotate(direction);
 
 		expect(pacman.direction).toEqual(direction);
+	});
+});
+
+test('Ghost should move to destination', () => {
+	forEveryDirectionDo(direction => {
+		const grid = new Grid();
+		const ghost = new Ghost({}, grid);
+		ghost.direction = direction;
+		ghost.name = 'tester';
+		const initialPoint = { x: 2, y: 2 };
+		const expectedPoint = getExpectedUnconstrainedPosition(direction, initialPoint)
+		grid.ghostsPositions.set(ghost.name, initialPoint);
+
+		ghost.tick();
+
+		expect(grid.getGhostPosition(ghost)).toEqual(expectedPoint);
+	});
+});
+
+test('Ghost should not move to destination', () => {
+	forEveryDirectionDo(direction => {
+		const grid = new Grid();
+		const ghost = new Ghost({}, grid);
+		ghost.direction = direction;
+		ghost.name = 'tester';
+		const initialPoint = { x: 2, y: 2 };
+		const expectedPoint = { x: 2, y: 2 };
+		grid.ghostsPositions.set(ghost.name, initialPoint);
+		grid.obstaclesPositions.push(getExpectedUnconstrainedPosition(direction, initialPoint));
+
+		ghost.tick();
+
+		expect(grid.getGhostPosition(ghost)).toEqual(expectedPoint);
 	});
 });
